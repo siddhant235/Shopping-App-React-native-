@@ -13,6 +13,12 @@ ProductDetail:ProductDetailScreen
         headerStyle:{
             backgroundColor:Platform.OS==='android'?Colors.primary:''
         },
+        headerTitleStyle:{
+fontFamily:'open-sans-bold'
+        },
+        headerBackTitle:{
+  fontFamily:'open-sans'
+        },
         headerTintColor:Platform.OS==='android'?'white':Colors.primary
     }
 })

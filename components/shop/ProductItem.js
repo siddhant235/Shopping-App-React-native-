@@ -40,7 +40,7 @@ product:{
     elevation:5,
     borderRadius:10,
     backgroundColor:'white',
-    height:300,
+    height:250,
     margin:20,
 
 },
@@ -50,7 +50,8 @@ image:{
 },
 title:{
     fontSize:18,
-    marginVertical:4
+    fontFamily:'open-sans-bold',
+    marginVertical:2
 },
 price:{
     fontSize:14,
