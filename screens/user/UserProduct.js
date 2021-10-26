@@ -1,26 +1,27 @@
 import React from 'react'
 import {FlatList,Button,Platform} from 'react-native'
 import ProductItem from '../../components/shop/ProductItem'
-import { useSelector } from 'react-redux'
+import { useSelector,useDispatch } from 'react-redux'
 import {HeaderButtons,Item } from "react-navigation-header-buttons";
 import HeaderButton from "../../components/UI/HeaderButton";
 import Colors from '../../constants/Colors';
+import * as productsActions from '../../store/actions/products'
 const UserProduct = (props) => {
     const userProducts=useSelector(state=>state.products.userProducts)
-    // return 
+    const dispatch=useDispatch();
     return (
         <>
         <FlatList data={userProducts} keyExtractor={item=>item.id} renderItem={itemdata=><ProductItem image={itemdata.item.imageUrl} title={itemdata.item.title}
     price={itemdata.item.price} onSelect={()=>{}}>
         <Button
             color={Colors.primary}
-            title="View Details"
+            title="Edit"
             onPress={()=>{}}
           ></Button>
           <Button
             color={Colors.primary}
-            title="To cart"
-            onPress={()=>{}
+            title="Delete"
+            onPress={()=>dispatch(productsActions.deleteProduct(itemdata.item.id))
           
             }
           ></Button>    
