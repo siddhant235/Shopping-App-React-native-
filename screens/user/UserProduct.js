@@ -9,14 +9,17 @@ import * as productsActions from '../../store/actions/products'
 const UserProduct = (props) => {
     const userProducts=useSelector(state=>state.products.userProducts)
     const dispatch=useDispatch();
+    const  editProductHandler=(id)=>{
+        props.navigation.navigate('EditProduct',{productId:id})
+    }
     return (
         <>
         <FlatList data={userProducts} keyExtractor={item=>item.id} renderItem={itemdata=><ProductItem image={itemdata.item.imageUrl} title={itemdata.item.title}
-    price={itemdata.item.price} onSelect={()=>{}}>
+    price={itemdata.item.price} onSelect={()=>{editProductHandler(itemdata.item.id)}}>
         <Button
             color={Colors.primary}
             title="Edit"
-            onPress={()=>{}}
+            onPress={()=>{editProductHandler(itemdata.item.id)}}
           ></Button>
           <Button
             color={Colors.primary}
@@ -35,6 +38,9 @@ UserProduct.navigationOptions=navData=>{
         headerLeft:<HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item title='Menu' iconName={Platform.OS==='android'?"md-menu":'ios-menu'} onPress={()=>{navData.navigation.toggleDrawer()}}/>
       </HeaderButtons>,
+      headerRight: <HeaderButtons HeaderButtonComponent={HeaderButton}>
+      <Item title='Menu' iconName={Platform.OS==='android'?"md-create":'ios-create'} onPress={()=>{navData.navigation.navigate('EditProduct')}}/>
+    </HeaderButtons>
        
     }
     
