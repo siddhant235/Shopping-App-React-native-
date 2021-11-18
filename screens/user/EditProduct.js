@@ -1,9 +1,11 @@
 import React,{useState,useEffect,useCallback} from 'react'
 import {View,Text,StyleSheet,ScrollView,TextInput,Platform} from 'react-native'
 import {HeaderButtons,Item } from "react-navigation-header-buttons";
+import * as actions from '../../store/actions/products'
 import HeaderButton from "../../components/UI/HeaderButton";
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 const EditProduct = (props) => {
+    const dispatch=useDispatch();
     const prodId=props.navigation.getParam('productId');
     const editedProduct=useSelector(state=>state.products.userProducts.find(prod=>prod.id===prodId))
     const [title,setTitle]=useState(editedProduct?editedProduct.title:'');
@@ -11,9 +13,15 @@ const EditProduct = (props) => {
     const [price,setPrice]=useState('');
     const [description,setdescription]=useState(editedProduct?editedProduct.description:'')
     
+
   const submitHandler=useCallback(()=>{
-      console.log("Submitting");
-  },[])
+      console.log(prodId)
+     if(editedProduct){
+         dispatch(actions.updateProduct(prodId,title,description,imageUrl))
+     }else{
+         dispatch(actions.createProduct(title,description,imageUrl,+price))
+     }
+  },[dispatch,prodId,imageUrl,title,price,description])
 
   useEffect(()=>{
       props.navigation.setParams({submit:submitHandler})
@@ -36,7 +44,7 @@ const EditProduct = (props) => {
         </View>} 
         <View style={styles.formControl}>
         <Text style={styles.label}>Description</Text>
-        <TextInput style={styles.input} value={description} onChangeText={text=>setdescription(description)}/>       
+        <TextInput style={styles.input} value={description} onChangeText={text=>setdescription(text)}/>       
         </View> 
         </View>
         </ScrollView>
