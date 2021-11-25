@@ -1,5 +1,5 @@
 import React,{useState,useEffect,useCallback} from 'react'
-import {View,Text,StyleSheet,ScrollView,TextInput,Platform} from 'react-native'
+import {View,Text,StyleSheet,ScrollView,TextInput,Platform,Alert} from 'react-native'
 import {HeaderButtons,Item } from "react-navigation-header-buttons";
 import * as actions from '../../store/actions/products'
 import HeaderButton from "../../components/UI/HeaderButton";
@@ -9,13 +9,19 @@ const EditProduct = (props) => {
     const prodId=props.navigation.getParam('productId');
     const editedProduct=useSelector(state=>state.products.userProducts.find(prod=>prod.id===prodId))
     const [title,setTitle]=useState(editedProduct?editedProduct.title:'');
+    const [titleIsValid,setTitleIsValid]=useState(false)
     const [imageUrl,setImageUrl]=useState(editedProduct?editedProduct.imageUrl:'');
     const [price,setPrice]=useState('');
     const [description,setdescription]=useState(editedProduct?editedProduct.description:'')
     
 
   const submitHandler=useCallback(()=>{
-      console.log(prodId)
+     if(!titleIsValid){
+         Alert.alert('Wrong Input','Please check the errors',[{
+             text:"okay"
+         }])
+        return; 
+     }
      if(editedProduct){
          dispatch(actions.updateProduct(prodId,title,description,imageUrl))
      }else{
@@ -26,13 +32,24 @@ const EditProduct = (props) => {
   useEffect(()=>{
       props.navigation.setParams({submit:submitHandler})
   },[submitHandler])
+  
+  const titleChangeHandler=(text)=>{
+      if(text.trim().length<=0)
+      {
+         setTitleIsValid(false) 
+      }else{
+          setTitleIsValid(true)
+      }
+ setTitle(text)
+  }
     return (
         <>
         <ScrollView>
             <View style={styles.form}>
            <View style={styles.formControl}>
         <Text style={styles.label}>Title</Text>
-        <TextInput style={styles.input} value={title} onChangeText={text=>setTitle(text)}/>       
+        <TextInput style={styles.input} value={title} autoCapitalize="sentences" onEndEditing={()=>console.log("onEndEditing")} onSubmitEditing={()=>console.log("onSubmitEditing")} autoCorrect returnKeyType="next" onChangeText={titleChangeHandler}/>       
+        {!titleIsValid && <Text>Please enter a valid title!</Text>}
         </View> 
         <View style={styles.formControl}>
         <Text style={styles.label}>Image URL</Text>
@@ -40,7 +57,7 @@ const EditProduct = (props) => {
         </View> 
       { editedProduct?null: <View style={styles.formControl}>
         <Text style={styles.label}>Price</Text>
-        <TextInput style={styles.input} value={price} onChangeText={text=>setPrice(text)}/>       
+        <TextInput style={styles.input} value={price} keyboardType="decimal-pad" onChangeText={text=>setPrice(text)}/>       
         </View>} 
         <View style={styles.formControl}>
         <Text style={styles.label}>Description</Text>
