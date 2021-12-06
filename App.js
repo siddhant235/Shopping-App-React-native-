@@ -1,6 +1,5 @@
 import React,{useState} from "react";
 import { compose,createStore, combineReducers,applyMiddleware } from "redux";
-import thunk from 'redux-thunk';
 import { Provider } from "react-redux";
 import AppLoading from 'expo-app-loading'
 import * as Font from 'expo-font'
@@ -8,13 +7,14 @@ import producReducer from "./store/reducers/products";
 import cartReducer from './store/reducers/cart'
 import ShopNavigator from "./navigation/ShopNavigator";
 import OrderReducer from './store/reducers/Orders'
+import ReduxThunk from 'redux-thunk'
 const rootReducer = combineReducers({
   products: producReducer,
   cart:cartReducer,
   order:OrderReducer
 });
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer,applyMiddleware(ReduxThunk));
 const fetchFonts=()=>{
   return Font.loadAsync({
     'open-sans':require('./assets/OpenSans-Regular.ttf'),
