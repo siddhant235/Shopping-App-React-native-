@@ -1,4 +1,5 @@
-import React, { useEffect, useCallback, useReducer } from "react";
+import React, {useState,useEffect, useCallback, useReducer } from "react";
+import Colors from "../../constants/Colors";
 import {
   View,
   Text,
@@ -7,6 +8,7 @@ import {
   TextInput,
   Platform,
   Alert,
+  ActivityIndicator,
   KeyboardAvoidingView
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -38,6 +40,8 @@ const formReducer = (state, action) => {
   }
 };
 const EditProduct = (props) => {
+  const [isLoading,setIsLoading]=useState(false)
+  const [error,setError]=useState()
   const dispatch = useDispatch();
   const prodId = props.navigation.getParam("productId");
   const editedProduct = useSelector((state) =>
@@ -58,8 +62,12 @@ const EditProduct = (props) => {
     },
     formIsValid: editedProduct ? true : false,
   });
-
-  const submitHandler = useCallback(() => {
+useEffect(()=>{
+  if(error){
+Alert.alert('An error occurreed!',error,[{text:'OKAY'}])
+  }
+},[error])
+  const submitHandler = useCallback(async () => {
     if (!formState.inputValidities.title) {
       Alert.alert("Wrong Input", "Please check the errors", [
         {
@@ -68,8 +76,11 @@ const EditProduct = (props) => {
       ]);
       return;
     }
+    setError(false)
+    setIsLoading(true)
+    try{
     if (editedProduct) {
-      dispatch(
+     await dispatch(
         actions.updateProduct(
           prodId,
           formState.inputValues.title,
@@ -78,7 +89,7 @@ const EditProduct = (props) => {
         )
       );
     } else {
-      dispatch(
+      await dispatch(
         actions.createProduct(
           formState.inputValues.title,
           formState.inputValues.description,
@@ -87,6 +98,13 @@ const EditProduct = (props) => {
         )
       );
     }
+    props.navigation.goBack();
+  }catch(err){
+    setIsLoading(false)
+    setError(err.message)
+  }
+  setIsLoading(false)
+   
   }, [
     dispatch,
     prodId,
@@ -110,6 +128,11 @@ const EditProduct = (props) => {
       input: inputIdentifier,
     });
   },[dispatchFormState]);
+
+  if(isLoading)
+  {
+    return <View style={styles.centred}><ActivityIndicator size="large" color={Colors.primary}/></View>
+  }
   return (
     <>
     <KeyboardAvoidingView style={{flex:1}} behavior="padding" keyboardVerticalOffset={100}>
@@ -197,5 +220,9 @@ const styles = StyleSheet.create({
   form: {
     margin: 20,
   },
+  centred:{
+    flex:1,
+    justifyContent:'center',
+  }
 });
 export default EditProduct;
