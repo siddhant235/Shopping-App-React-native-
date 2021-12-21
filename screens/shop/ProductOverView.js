@@ -19,6 +19,7 @@ import { isLoading } from "expo-font";
 const ProductOverView = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isRefreshing,setIsRefreshing]=useState(false)
   const products = useSelector((state) => state.products.availableProducts);
   const cart = useSelector((state) => state.cart.items);
   const selectItemHandler = (id, title) => {
@@ -29,19 +30,21 @@ const ProductOverView = (props) => {
   };
   const dispatch = useDispatch();
   const loadProducts = useCallback(async () => {
+    setIsRefreshing(true)
     setError(null)
-    setIsLoading(true);
+  
     try {
       await dispatch(productActions.fetchProducts());
     } catch (err) {
       setError(err.message);
     }
-    setIsLoading(false);
-  },[dispatch,setError,setIsLoading]);
-  // useEffect(() => {
+    setIsRefreshing(false)
    
-  //   loadProducts();
-  // }, [dispatch]);
+  },[dispatch,setError,setIsLoading]);
+  useEffect(() => {
+   setIsLoading(true)
+    loadProducts().then(()=>setIsLoading(false));
+  }, [dispatch]);
 useEffect(()=>{
  const willFocusSub= props.navigation.addListener('willFocus',loadProducts)
   return ()=>{
@@ -74,6 +77,8 @@ useEffect(()=>{
   }
   return (
     <FlatList
+     onRefresh={loadProducts}
+     refreshing={isRefreshing}
       data={products}
       keyExtractor={(item) => item.id}
       renderItem={(itemData) => (

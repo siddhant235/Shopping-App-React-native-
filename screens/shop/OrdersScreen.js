@@ -17,7 +17,7 @@ const OrdersScreen = (props) => {
     },[dispatch])
     const orders=useSelector(state=>state.order.orders)
     if(isLoading){
-        return <View><ActivityIndicator size="large" color={Colors.primary}/></View>
+        return <View style={styles.centred}><ActivityIndicator size="large" color={Colors.primary}/></View>
     }
     return <FlatList data={orders} keyExtractor={item=>item.id} renderItem={itemData=><OrderItem amount={itemData.item.totalAmount} date={itemData.item.readabledate} items={itemData.item.items} />}/>
 }
@@ -30,5 +30,11 @@ OrdersScreen.navigationOptions=navData=>{
     }
    
 }
-
+const styles=StyleSheet.create({
+    centred:{
+        flex:1,
+        justifyContent:'center',
+        alignItems:"center"
+    }
+})
 export default OrdersScreen
