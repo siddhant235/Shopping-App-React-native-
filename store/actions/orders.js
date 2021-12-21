@@ -1,6 +1,27 @@
 
-
+import Order from '../../models/order'
 export const ADD_ORDER="ADD_ORDER"
+export const SET_ORDERS='SET_ORDERS'
+export const fecthOrders=()=>{
+    return async dispatch=>{
+        try{
+        const response=await fetch("https://rn-first-fe6f9-default-rtdb.firebaseio.com/orders.json")
+       
+       if(!response.ok){
+          throw new Error('Something went wrong!')
+       }
+         const resData=await response.json();
+         console.log(resData)
+         const loadedOrders=[];
+         for(const key in resData){
+             loadedOrders.push(new Order(key,resData[key].CartItems,resData[key].totalAmount,new Date(resData[key].date)))
+         }
+         dispatch({type:SET_ORDERS,orders:loadedOrders})
+        }catch(err){
+            throw err;
+        }
+        }
+}
 export const addOrder=(CartItems,totalAmount)=>{
     return async dispatch=>{
         const date=new Date()
