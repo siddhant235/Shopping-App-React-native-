@@ -65,8 +65,10 @@ const ShopNavigator=createDrawerNavigator({
     })
 const AuthNavigator=createStackNavigator({
     Auth:AuthScreen
+},{
+    defaultNavigationOptions:defaultNavOptions
 })
-    const MainNavigator=createStackNavigator({
+    const MainNavigator=createSwitchNavigator({
         Auth:AuthNavigator,
         Shop:ShopNavigator
     })
