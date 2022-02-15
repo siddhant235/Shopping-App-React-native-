@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   FlatList,
@@ -19,7 +19,7 @@ import { isLoading } from "expo-font";
 const ProductOverView = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isRefreshing,setIsRefreshing]=useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const products = useSelector((state) => state.products.availableProducts);
   const cart = useSelector((state) => state.cart.items);
   const selectItemHandler = (id, title) => {
@@ -30,33 +30,40 @@ const ProductOverView = (props) => {
   };
   const dispatch = useDispatch();
   const loadProducts = useCallback(async () => {
-    setIsRefreshing(true)
-    setError(null)
-  
+    setIsRefreshing(true);
+    setError(null);
+
     try {
       await dispatch(productActions.fetchProducts());
     } catch (err) {
+      console.log(err);
       setError(err.message);
     }
-    setIsRefreshing(false)
-   
-  },[dispatch,setError,setIsLoading]);
+    setIsRefreshing(false);
+  }, [dispatch, setError, setIsLoading]);
+  
   useEffect(() => {
-   setIsLoading(true)
-    loadProducts().then(()=>setIsLoading(false));
+    setIsLoading(true);
+    loadProducts().then(() => setIsLoading(false));
   }, [dispatch]);
-useEffect(()=>{
- const willFocusSub= props.navigation.addListener('willFocus',loadProducts)
-  return ()=>{
-    willFocusSub.remove()
-  }
-},[loadProducts])
-  if(error)
-  {
+  // useEffect(() => {
+  //   const willFocusSub = props.navigation.addListener(
+  //     "willFocus",
+  //     loadProducts
+  //   );
+  //   return () => {
+  //     willFocusSub.remove();
+  //   };
+  // }, [loadProducts]);
+  if (error) {
     return (
       <View style={styles.centered}>
-       <Text>An Error Occured</Text>
-       <Button title="Try Again" onPress={loadProducts} color={Colors.primary}/>
+        <Text>An Error Occured</Text>
+        <Button
+          title="Try Again"
+          onPress={loadProducts}
+          color={Colors.primary}
+        />
       </View>
     );
   }
@@ -77,8 +84,8 @@ useEffect(()=>{
   }
   return (
     <FlatList
-     onRefresh={loadProducts}
-     refreshing={isRefreshing}
+      onRefresh={loadProducts}
+      refreshing={isRefreshing}
       data={products}
       keyExtractor={(item) => item.id}
       renderItem={(itemData) => (

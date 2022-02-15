@@ -1,8 +1,9 @@
 import React from 'react'
 import {createAppContainer,createSwitchNavigator} from 'react-navigation'
-import { Platform } from 'react-native'
+import { Platform,SafeAreaView,Button,View } from 'react-native'
 import {createStackNavigator} from 'react-navigation-stack'
-import { createDrawerNavigator } from 'react-navigation-drawer';
+import { useDispatch } from 'react-redux'
+import { createDrawerNavigator, DrawerNavigatorItems } from 'react-navigation-drawer';
 import ProductOverview from '../screens/shop/ProductOverView'
 import ProductDetailScreen from '../screens/shop/ProductDetailScreen'
 import Colors from '../constants/Colors'
@@ -12,6 +13,8 @@ import { Ionicons } from '@expo/vector-icons';
 import UserProductScreen from '../screens/user/UserProduct';
 import EditProductScreen from '../screens/user/EditProduct';
 import AuthScreen from '../screens/user/AuthScreen';
+import StartupScreen from '../screens/StartupScreen';
+import * as authActions from '../store/actions/auth'
 const defaultNavOptions={
     headerStyle:{
         backgroundColor:Platform.OS==='android'?Colors.primary:''
@@ -61,6 +64,18 @@ const ShopNavigator=createDrawerNavigator({
     },{
         contentOptions:{
             activeTintColor:Colors.primary
+        },
+        contentComponent:props=>{
+            const dispatch=useDispatch()
+            return <View style={{flex:1}}>
+                <SafeAreaView forceInset={{top:'always',horizontal:'never'}}>
+                  <DrawerNavigatorItems {...props}/>
+                  <Button title="Logout" color={Colors.primary} onPress={()=>{
+                      dispatch(authActions.logout())
+                      props.navigation.navigate('Auth')
+                  }}/>
+                </SafeAreaView>
+            </View>
         }
     })
 const AuthNavigator=createStackNavigator({
@@ -69,6 +84,7 @@ const AuthNavigator=createStackNavigator({
     defaultNavigationOptions:defaultNavOptions
 })
     const MainNavigator=createSwitchNavigator({
+        Startup:StartupScreen,
         Auth:AuthNavigator,
         Shop:ShopNavigator
     })

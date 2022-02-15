@@ -13,12 +13,21 @@ const OrdersScreen = (props) => {
         setIsLoading(true)
         dispatch(OrderActions.fecthOrders()).then(()=>{
             setIsLoading(false)
-        })
+        }).catch(err=>console.log(err))
+
+        return ()=>{setIsLoading()}
     },[dispatch])
     const orders=useSelector(state=>state.order.orders)
     if(isLoading){
         return <View style={styles.centred}><ActivityIndicator size="large" color={Colors.primary}/></View>
     }
+    if(orders.length==0){
+        return(
+            <View style={{flex:1,justifyContent:'center',alignItems:"center"}}>
+                <Text>No Orders found, maybe start creating some?</Text>
+            </View>
+        )
+          }
     return <FlatList data={orders} keyExtractor={item=>item.id} renderItem={itemData=><OrderItem amount={itemData.item.totalAmount} date={itemData.item.readabledate} items={itemData.item.items} />}/>
 }
 OrdersScreen.navigationOptions=navData=>{

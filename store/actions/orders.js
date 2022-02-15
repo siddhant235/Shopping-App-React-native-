@@ -3,10 +3,11 @@ import Order from '../../models/order'
 export const ADD_ORDER="ADD_ORDER"
 export const SET_ORDERS='SET_ORDERS'
 export const fecthOrders=()=>{
-    return async dispatch=>{
+    return async (dispatch,getState)=>{
+        const token=getState().auth.token
         try{
-        const response=await fetch("https://rn-first-fe6f9-default-rtdb.firebaseio.com/orders.json")
-       
+        const response=await fetch(`https://rn-first-fe6f9-default-rtdb.firebaseio.com/orders.json?auth=${token}`)
+        console.log(response)
        if(!response.ok){
           throw new Error('Something went wrong!')
        }
