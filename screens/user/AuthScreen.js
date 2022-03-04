@@ -69,7 +69,7 @@ const AuthScreen = (props) => {
     }
   },[error])
 
-  const authHandler=async()=>{
+  const authHandler=()=>{
     let action;
     if(isSignUp)
  action=AuthActions.signup(formState.inputValues.email,formState.inputValues.password)
@@ -79,8 +79,8 @@ const AuthScreen = (props) => {
     setError(null)
    setIsLoading(true)
   try {
-    await dispatch(action); 
-    props.navigation.navigate('Shop')
+    dispatch(action); 
+    // props.navigation.navigate('Shop')
   } catch (error) {
     setError(error.message)
   }
@@ -135,7 +135,7 @@ const AuthScreen = (props) => {
     </>
   );
 };
-AuthScreen.navigationOptions = {
+export const screenOptions = {
   headerTitle: "Authenticate",
 };
 const styles = StyleSheet.create({

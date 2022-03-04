@@ -51,12 +51,12 @@ const UserProduct = (props) => {
         </>
     )
 }
-UserProduct.navigationOptions=navData=>{
+export const screenOptions=navData=>{
     return{
-        headerLeft:<HeaderButtons HeaderButtonComponent={HeaderButton}>
+        headerLeft:()=><HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item title='Menu' iconName={Platform.OS==='android'?"md-menu":'ios-menu'} onPress={()=>{navData.navigation.toggleDrawer()}}/>
       </HeaderButtons>,
-      headerRight: <HeaderButtons HeaderButtonComponent={HeaderButton}>
+      headerRight:()=> <HeaderButtons HeaderButtonComponent={HeaderButton}>
       <Item title='Menu' iconName={Platform.OS==='android'?"md-create":'ios-create'} onPress={()=>{navData.navigation.navigate('EditProduct')}}/>
     </HeaderButtons>
        

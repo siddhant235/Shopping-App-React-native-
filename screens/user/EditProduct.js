@@ -43,7 +43,7 @@ const EditProduct = (props) => {
   const [isLoading,setIsLoading]=useState(false)
   const [error,setError]=useState()
   const dispatch = useDispatch();
-  const prodId = props.navigation.getParam("productId");
+  const prodId = props.route.params? props.route.params.productId:null
   const editedProduct = useSelector((state) =>
     state.products.userProducts.find((prod) => prod.id === prodId)
   );
@@ -116,7 +116,19 @@ Alert.alert('An error occurreed!',error,[{text:'OKAY'}])
   ]);
 
   useEffect(() => {
-    props.navigation.setParams({ submit: submitHandler });
+    props.navigation.setOptions({
+      headerRight:()=> (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="Save"
+            iconName={
+              Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"
+            }
+            onPress={submitHandler}
+          />
+        </HeaderButtons>
+      )
+    });
   }, [submitHandler]);
 
   const inputChangedHandler = useCallback((inputIdentifier, inputValue,inputValidity) => {
@@ -196,24 +208,14 @@ Alert.alert('An error occurreed!',error,[{text:'OKAY'}])
     </>
   );
 };
-EditProduct.navigationOptions = (navData) => {
-  const submitFn = navData.navigation.getParam("submit");
-
+export const screenOptions = (navData) => {
+  const submitFn = navData.route.params?navData.route.params.submit:null;
+   const routeParams=navData.route.params?navData.route.params:{}
   return {
-    headerTitle: navData.navigation.getParam("productId")
+    headerTitle: routeParams.productId
       ? "Edit Product"
       : "Add Product",
-    headerRight: (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title="Save"
-          iconName={
-            Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"
-          }
-          onPress={submitFn}
-        />
-      </HeaderButtons>
-    ),
+    
   };
 };
 const styles = StyleSheet.create({

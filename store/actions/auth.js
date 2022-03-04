@@ -3,12 +3,20 @@ export const LOGIN = "LOGIN";
 export const AUTHENTICATE = "AUTHENTICATE";
 export const LOGOUT = "LOGOUT";
 let timer;
+export const SET_DID_TRY_AL='SET_DID_TRY_AL'
+export const setDidTryAl=()=>{
+  return {
+    type:SET_DID_TRY_AL
+  }
+}
 export const authenticate = (userId, token, expiryTime) => {
   return (dispatch) => {
     dispatch(setLogoutTimer(expiryTime));
     dispatch({ type: AUTHENTICATE, userId: userId, token: token });
   };
 };
+
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 export const signup = (email, password) => {
   return async (dispatch) => {

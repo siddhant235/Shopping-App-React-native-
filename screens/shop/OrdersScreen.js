@@ -30,10 +30,10 @@ const OrdersScreen = (props) => {
           }
     return <FlatList data={orders} keyExtractor={item=>item.id} renderItem={itemData=><OrderItem amount={itemData.item.totalAmount} date={itemData.item.readabledate} items={itemData.item.items} />}/>
 }
-OrdersScreen.navigationOptions=navData=>{
+export const screenOptions=navData=>{
     return{
         headerTitle:'Your Orders',
-        headerLeft:<HeaderButtons HeaderButtonComponent={HeaderButton}>
+        headerLeft:()=><HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item title='Menu' iconName={Platform.OS==='android'?"md-menu":'ios-menu'} onPress={()=>{navData.navigation.toggleDrawer()}} />
       </HeaderButtons>
     }

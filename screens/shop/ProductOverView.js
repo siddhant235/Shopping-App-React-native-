@@ -46,15 +46,15 @@ const ProductOverView = (props) => {
     setIsLoading(true);
     loadProducts().then(() => setIsLoading(false));
   }, [dispatch]);
-  // useEffect(() => {
-  //   const willFocusSub = props.navigation.addListener(
-  //     "willFocus",
-  //     loadProducts
-  //   );
-  //   return () => {
-  //     willFocusSub.remove();
-  //   };
-  // }, [loadProducts]);
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener(
+      "focus",
+      loadProducts
+    );
+    return () => {
+      unsubscribe()
+    };
+  }, [loadProducts]);
   if (error) {
     return (
       <View style={styles.centered}>
@@ -119,10 +119,10 @@ const ProductOverView = (props) => {
 const styles = StyleSheet.create({
   centered: { flex: 1, justifyContent: "center", alignItems: "center" },
 });
-ProductOverView.navigationOptions = (navData) => {
+export const screenOptions= (navData) => {
   return {
     headerTitle: "All Products",
-    headerLeft: (
+    headerLeft:()=> (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
           title="Menu"
@@ -133,7 +133,7 @@ ProductOverView.navigationOptions = (navData) => {
         />
       </HeaderButtons>
     ),
-    headerRight: (
+    headerRight:()=> (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
           title="Cart"
