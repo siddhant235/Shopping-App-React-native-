@@ -10,6 +10,15 @@ import OrderReducer from './store/reducers/Orders'
 import ReduxThunk from 'redux-thunk'
 import authReducer from './store/reducers/auth'
 import AppNavigator from "./navigation/AppNavigator";
+import * as Notifications from 'expo-notifications'
+
+Notifications.setNotificationHandler({
+  handleNotification:async()=>{
+    return {
+      shouldShowAlert:true
+    }
+  }
+})
 const rootReducer = combineReducers({
   products: producReducer,
   cart:cartReducer,
